@@ -1,0 +1,10 @@
+{
+  "name": "NurMuslim - Superapp Islami Indonesia",
+  "description": "Superapp Islami terlengkap dengan Al-Qur'an 30 Juz, Jadwal Sholat, Arah Kiblat, Kalkulator Zakat, Notifikasi Adzan, Artikel Harian, Pencari Masjid, Komunitas, dan Radio As-Sunnah.",
+  "requestFramePermissions": [
+    "geolocation"
+  ],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}
