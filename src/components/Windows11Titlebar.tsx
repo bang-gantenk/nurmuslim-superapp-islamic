@@ -3,6 +3,7 @@ import { Search, MapPin, Calendar, Clock, ChevronDown, Check } from 'lucide-reac
 import { CityLocation, AppTab } from '../types';
 import { INDONESIAN_CITIES } from '../data/prayerCalculation';
 import { NurMuslimLogo } from './NurMuslimLogo';
+import { PWAInstallButton } from './PWAInstallButton';
 
 interface Windows11TitlebarProps {
   setActiveTab: (tab: AppTab) => void;
@@ -113,8 +114,9 @@ export const Windows11Titlebar: React.FC<Windows11TitlebarProps> = ({
             </button>
           </div>
 
-          {/* Right: City Selector Button (No Minimize, Maximize, or Close Buttons) */}
+          {/* Right: PWA / APK Install Button + City Selector Button */}
           <div className="flex items-center gap-1.5">
+            <PWAInstallButton variant="pill" />
             <button
               id="titlebar-city-selector-btn"
               onClick={() => setIsCityModalOpen(true)}

@@ -25,6 +25,7 @@ import { CommunityForumView } from './components/CommunityForumView';
 import { AdzanNotificationModal } from './components/AdzanNotificationModal';
 import { AuthModal } from './components/AuthModal';
 import { AuthGateScreen } from './components/AuthGateScreen';
+import { OfflineIndicator } from './components/OfflineIndicator';
 
 export default function App() {
   // Theme state (Elegant Dark mode default)
@@ -589,6 +590,9 @@ export default function App() {
         selectedCity={selectedCity}
         setSelectedCity={setSelectedCity}
       />
+
+      {/* PWA Offline Mode Toast Indicator */}
+      <OfflineIndicator />
     </div>
   );
 }

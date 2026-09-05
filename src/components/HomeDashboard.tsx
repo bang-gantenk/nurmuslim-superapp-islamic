@@ -27,6 +27,7 @@ import {
 import { AppTab, CityLocation, PrayerTimeSchedule, RadioStation, Bookmark } from '../types';
 import { ISLAMIC_ARTICLES, DZIKIR_PAGI_PETANG } from '../data/articlesAndDoa';
 import { RADIO_STATIONS } from '../data/radioChannels';
+import { PWAInstallButton } from './PWAInstallButton';
 
 interface HomeDashboardProps {
   setActiveTab?: (tab: AppTab) => void;
@@ -310,6 +311,8 @@ export const HomeDashboard: React.FC<HomeDashboardProps> = ({
                 <Volume2 className="w-4 h-4 text-emerald-300" />
                 <span>Tes Audio Adzan</span>
               </button>
+
+              <PWAInstallButton variant="compact" />
             </div>
           </div>
 
