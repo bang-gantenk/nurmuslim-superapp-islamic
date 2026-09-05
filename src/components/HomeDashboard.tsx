@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { 
   BookOpen, 
   Clock, 
+  Calendar,
   Compass, 
   Calculator, 
   Radio, 
@@ -254,9 +255,15 @@ export const HomeDashboard: React.FC<HomeDashboardProps> = ({
                 <MapPin className="w-3.5 h-3.5 text-amber-300" />
                 {selectedCity.name}, {selectedCity.province} ({selectedCity.timezone})
               </span>
-              <span className="text-xs text-emerald-200/90 font-medium">
-                {prayerTimes.hijriDate}
-              </span>
+              <button 
+                onClick={() => onNavigateTab('prayer')}
+                className="px-3 py-1 rounded-full bg-emerald-700/60 hover:bg-emerald-600/70 text-emerald-100 text-xs font-semibold backdrop-blur-sm border border-emerald-500/30 flex items-center gap-1.5 transition-colors cursor-pointer"
+                title="Klik untuk memilih Tanggal, Bulan, dan Tahun Jadwal Sholat"
+              >
+                <Calendar className="w-3.5 h-3.5 text-amber-300" />
+                <span>{prayerTimes.date}</span>
+                <span className="text-emerald-300 font-bold">• {prayerTimes.hijriDate}</span>
+              </button>
             </div>
 
             <div>

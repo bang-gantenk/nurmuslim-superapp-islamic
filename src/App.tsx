@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useMemo } from 'react';
 import { 
   AppTab, 
   CityLocation, 
@@ -118,11 +118,20 @@ export default function App() {
   const [streamStatus, setStreamStatus] = useState<'idle' | 'connecting' | 'playing' | 'buffering' | 'fallback'>('idle');
   const [statusMessage, setStatusMessage] = useState<string>('');
 
+  // Date selection state for prayer times (Tanggal, Bulan, Tahun)
+  const [selectedDate, setSelectedDate] = useState<Date>(() => new Date());
+
   // Notification Modal
   const [isAdzanModalOpen, setIsAdzanModalOpen] = useState<boolean>(false);
   const [adzanNotificationEnabled, setAdzanNotificationEnabled] = useState<boolean>(() => {
     return localStorage.getItem('nurmuslim_adzan_notif') === 'true';
   });
+
+  // Calculate prayer times for the user-selected date (changes dynamically with date/month/year)
+  const selectedDatePrayerTimes = useMemo(() => {
+    const tzOffset = selectedCity.timezone === 'WIT' ? 9 : selectedCity.timezone === 'WITA' ? 8 : 7;
+    return calculatePrayerTimes(selectedCity.latitude, selectedCity.longitude, tzOffset, selectedDate);
+  }, [selectedCity, selectedDate]);
 
   const radioAudioRef = useRef<HTMLAudioElement | null>(null);
   const retryTimeoutRef = useRef<any>(null);
@@ -421,7 +430,9 @@ export default function App() {
         setActiveTab={setActiveTab}
         selectedCity={selectedCity}
         setSelectedCity={setSelectedCity}
-        hijriDate="1447 H"
+        hijriDate={selectedDatePrayerTimes.hijriDate}
+        selectedDate={selectedDate}
+        setSelectedDate={setSelectedDate}
         onOpenAdzanTest={() => setIsAdzanModalOpen(true)}
       />
 
@@ -467,7 +478,9 @@ export default function App() {
           <PrayerTimesView
             selectedCity={selectedCity}
             setSelectedCity={setSelectedCity}
-            prayerTimes={prayerTimes}
+            prayerTimes={selectedDatePrayerTimes}
+            selectedDate={selectedDate}
+            setSelectedDate={setSelectedDate}
             adzanNotificationEnabled={adzanNotificationEnabled}
             setAdzanNotificationEnabled={setAdzanNotificationEnabled}
             onOpenAdzanTest={() => setIsAdzanModalOpen(true)}
