@@ -1,0 +1,89 @@
+name: Build Android APK & Release
+
+on:
+  push:
+    branches: [ main ]
+    tags:
+      - 'v*'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build-apk:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
+      - name: Set up Android SDK
+        uses: android-actions/setup-android@v3
+
+      - name: Install Dependencies
+        run: npm ci || npm install
+
+      - name: Build Web Application
+        run: npm run build
+
+      - name: Add & Sync Capacitor Android
+        run: |
+          npx cap add android || true
+          npx cap copy android
+          npx cap update android
+
+      - name: Build Debug APK with Gradle
+        run: |
+          cd android
+          chmod +x gradlew
+          ./gradlew assembleDebug --stacktrace
+
+      - name: Prepare APK File for Release
+        run: |
+          mkdir -p output
+          cp android/app/build/outputs/apk/debug/app-debug.apk output/NurMuslim-SuperApp-v1.0.0.apk
+
+      - name: Upload APK Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: NurMuslim-SuperApp-APK
+          path: output/NurMuslim-SuperApp-v1.0.0.apk
+
+      - name: Create or Update GitHub Release
+        uses: softprops/action-gh-release@v2
+        if: startsWith(github.ref, 'refs/tags/') || github.ref == 'refs/heads/main'
+        with:
+          tag_name: v1.0.0-apk
+          name: "NurMuslim SuperApp v1.0.0 APK"
+          body: |
+            ## 📱 NurMuslim SuperApp Islami Indonesia - Android APK Release
+            
+            Format APK dapat langsung diunduh dan diinstall di Smartphone Android Anda!
+            
+            ### 📥 Download APK
+            - **[NurMuslim-SuperApp-v1.0.0.apk](https://github.com/${{ github.repository }}/releases/download/v1.0.0-apk/NurMuslim-SuperApp-v1.0.0.apk)**
+            
+            ### ✨ Fitur Utama:
+            - 🕌 Jadwal Sholat & Azan
+            - 🧭 Kompas Qiblat
+            - 📖 Al-Qur'an 30 Juz & Terjemahan
+            - 📻 Radio Sunnah Stream
+            - 🧮 Kalkulator Zakat
+            - 🤲 Kumpulan Doa & Artikel Islami
+            - 👥 Forum Komunitas & Info Masjid
+          files: |
+            output/NurMuslim-SuperApp-v1.0.0.apk
+          prerelease: false
